@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>长剑反应训练</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #222;
+    color: white;
+}
+
+.mode-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    background: #555;
+    color: white;
+    font-size: 16px;
+}
+
+.mode-btn.active {
+    background: #00aaff;
+}
+
+#signalBox {
+    width: 90%;
+    height: 600px;
+    margin: 30px auto;
+    border: 3px solid white;
+    background: black;
+    font-size: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+</head>
+
+<body>
+
+<h1>长剑反应训练</h1>
+
+<h3>模式选择</h3>
+<button class="mode-btn active" onclick="setMode('audio', this)">听觉反应训练</button>
+<button class="mode-btn" onclick="setMode('visual', this)">视觉反应训练</button>
+
+<br><br>
+
+<label>间隔:</label>
+<select id="interval">
+    <option value="2-3">2-3 秒</option>
+    <option value="1-2">1-2 秒</option>
+    <option value="3-5">3-5 秒</option>
+</select>
+
+<br><br>
+
+<button onclick="startTraining()">开始训练</button>
+
+<div id="signalBox"></div>
+
+<script>
+let currentMode = "audio";
+let running = false;
+
+/* 信号定义 */
+const signals = [
+    { name: "进攻", color: "green" },
+    { name: "防御", color: "red" },
+    { name: "后退", color: "yellow" }
+];
+
+function setMode(mode, btn) {
+    currentMode = mode;
+
+    document.querySelectorAll(".mode-btn").forEach(b => {
+        b.classList.remove("active");
+    });
+
+    btn.classList.add("active");
+}
+
+function randomInterval(range) {
+    const [min, max] = range.split("-").map(Number);
+    return (Math.random() * (max - min) + min) * 1000;
+}
+
+/* ===== 更容易区分的声音模式 ===== */
+
+function playAttack() {
+    beep(900, 150);
+}
+
+function playDefend() {
+    beep(600, 120);
+    setTimeout(() => beep(600, 120), 150);
+}
+
+function playRetreat() {
+    beep(300, 300);
+}
+
+function beep(freq, duration) {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    osc.frequency.value = freq;
+    osc.connect(ctx.destination);
+    osc.start();
+
+    setTimeout(() => {
+        osc.stop();
+        ctx.close();
+    }, duration);
+}
+
+/* ===== 视觉闪烁 ===== */
+
+function flash(color) {
+    const box = document.getElementById("signalBox");
+    box.style.background = color;
+
+    setTimeout(() => {
+        box.style.background = "black";
+    }, 300);
+}
+
+/* ===== 主循环 ===== */
+
+function nextSignal() {
+    if (!running) return;
+
+    const range = document.getElementById("interval").value;
+    const signal = signals[Math.floor(Math.random() * signals.length)];
+
+    if (currentMode === "visual") {
+        flash(signal.color);
+    } else {
+        if (signal.name === "进攻") playAttack();
+        if (signal.name === "防御") playDefend();
+        if (signal.name === "后退") playRetreat();
+    }
+
+    setTimeout(nextSignal, randomInterval(range));
+}
+
+function startTraining() {
+    running = true;
+    document.getElementById("signalBox").style.background = "black";
+    nextSignal();
+}
+</script>
+
+</body>
+</html>
