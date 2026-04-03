@@ -1,0 +1,103 @@
+body {
+    margin: 0;
+    height: 100vh;
+    background: white;
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+#controler {
+    position: absolute;
+    width: 12%;
+    height: 100%;
+    background: #f2f2f2;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    /* 动画 */
+    transition: all 0.15s ease;
+
+    /* 防止点击蓝框（更干净） */
+    outline: none;
+}
+
+/* ========= 默认 ========= */
+#start_btn {
+    background: #4caf50;
+    color: white;
+}
+
+#stop_btn {
+    background: #f44336;
+    color: white;
+}
+
+/* ========= hover ========= */
+#start_btn:hover {
+    background: #45a049;
+}
+
+#stop_btn:hover {
+    background: #da190b;
+}
+
+button:active {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+}
+
+button.active {
+    filter: brightness(0.9);
+    cursor: not-allowed;
+}
+
+#displayer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* width: 100%; */
+    height: 100%;
+    aspect-ratio: 1 / 1;
+
+    /* max-width: 100%;
+    max-height: 100%; */
+}
+
+#arena { width: 100%; height: 100%;}
+
+path {
+    stroke: rgba(48, 48, 48, 1);
+    stroke-width: 0.2;
+    fill: transparent;
+}
+
+circle {
+    stroke: rgba(48, 48, 48, 1);
+    stroke-width: 0.2;
+    fill: transparent;
+}
+
+line {
+    stroke: rgba(120, 120, 120, 0.2);
+    stroke-width: 0.8;
+    stroke-linecap: round;
+}
+
+.attack {
+    fill: rgba(248, 248, 248, 1);
+}
+
+.guard {
+    stroke: rgba(120, 120, 120, 0.2);
+}
